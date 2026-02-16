@@ -1,0 +1,7 @@
+Login credentials (all passwords: password123):
+  Super Admin:  superadmin@scm.com
+  Road Admin:   roadadmin@scm.com
+  Water Admin:  wateradmin@scm.com
+  Road Worker:  roadworker1@scm.com
+  Water Worker: waterworker1@scm.com
+  Citizen:      citizen@scm.com
