@@ -16,6 +16,7 @@ import {
   Tags,
   MapPin,
   UserCircle,
+  Flame,
   type LucideIcon,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
@@ -58,6 +59,7 @@ const navItems: Record<UserRole, NavItem[]> = {
       icon: FileText,
     },
     { label: "Map View", href: "/dashboard/super-admin/map", icon: MapPin },
+    { label: "Heatmap", href: "/dashboard/super-admin/heatmap", icon: Flame },
     { label: "Profile", href: "/dashboard/super-admin/profile", icon: UserCircle },
   ],
   admin: [
@@ -70,6 +72,7 @@ const navItems: Record<UserRole, NavItem[]> = {
     { label: "Workers", href: "/dashboard/admin/workers", icon: Users },
     { label: "Leaves", href: "/dashboard/admin/leaves", icon: CalendarDays },
     { label: "Map View", href: "/dashboard/admin/map", icon: MapPin },
+    { label: "Heatmap", href: "/dashboard/admin/heatmap", icon: Flame },
     { label: "Profile", href: "/dashboard/admin/profile", icon: UserCircle },
   ],
   worker: [
