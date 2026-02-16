@@ -122,18 +122,6 @@ export default function LandingPage() {
                   </Button>
                 </Link>
               </div>
-
-              <div className="mt-12 w-full max-w-5xl mx-auto p-2 rounded-2xl bg-gradient-to-b from-white/20 to-transparent backdrop-blur-sm border border-white/20 shadow-2xl">
-                <div className="rounded-xl overflow-hidden aspect-video bg-muted/50 border border-white/10 relative group">
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="sr-only">Dashboard Preview</span>
-                  </div>
-                  {/* Placeholder for dashboard image */}
-                  <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center text-muted-foreground">
-                    <Activity className="h-16 w-16 opacity-20" />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
