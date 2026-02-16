@@ -37,6 +37,7 @@ export default function AdminComplaintDetail() {
   const [workerTaskCounts, setWorkerTaskCounts] = useState<
     Record<string, { active: number; total: number; resolved: number }>
   >({});
+  const [workersOnLeave, setWorkersOnLeave] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [isAssigning, setIsAssigning] = useState(false);
   const [error, setError] = useState("");
@@ -51,14 +52,29 @@ export default function AdminComplaintDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [complaintRes, usersRes, dashRes] = await Promise.all([
+        const [complaintRes, usersRes, dashRes, leavesRes] = await Promise.all([
           apiClient.get(`/complaints/${id}`),
           apiClient.get("/users?role=worker&limit=100"),
           apiClient.get("/dashboard?timeframe=year"),
+          apiClient.get("/leaves?status=approved&limit=100"),
         ]);
         setComplaint(complaintRes.data.data.complaint);
         setStatusLogs(complaintRes.data.data.statusLogs);
         setWorkers(usersRes.data.data.users);
+
+        // Build set of worker IDs currently on leave
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const onLeaveIds = new Set<string>();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        leavesRes.data.data.leaves?.forEach((leave: any) => {
+          const start = new Date(leave.startDate);
+          const end = new Date(leave.endDate);
+          if (start <= today && end >= today && leave.workerId?._id) {
+            onLeaveIds.add(leave.workerId._id.toString());
+          }
+        });
+        setWorkersOnLeave(onLeaveIds);
 
         // Build worker task count map from dashboard workerStats
         const taskMap: Record<
@@ -213,6 +229,7 @@ export default function AdminComplaintDetail() {
                       {workers.map((w: any) => {
                         const isSelected =
                           assignForm.assignedWorkerId === w._id;
+                        const isOnLeave = workersOnLeave.has(w._id);
                         const taskInfo = workerTaskCounts[w._id] || {
                           active: 0,
                           total: 0,
@@ -222,16 +239,19 @@ export default function AdminComplaintDetail() {
                           <button
                             key={w._id}
                             type="button"
+                            disabled={isOnLeave}
                             onClick={() =>
                               setAssignForm({
                                 ...assignForm,
                                 assignedWorkerId: w._id,
                               })
                             }
-                            className={`flex items-center gap-3 rounded-lg border p-3 text-left transition-all hover:bg-accent/50 ${
-                              isSelected
-                                ? "border-primary ring-2 ring-primary/20 bg-primary/5"
-                                : "border-border"
+                            className={`flex items-center gap-3 rounded-lg border p-3 text-left transition-all ${
+                              isOnLeave
+                                ? "border-border opacity-50 cursor-not-allowed bg-muted/30"
+                                : isSelected
+                                  ? "border-primary ring-2 ring-primary/20 bg-primary/5 hover:bg-primary/5"
+                                  : "border-border hover:bg-accent/50"
                             }`}
                           >
                             {/* Avatar */}
@@ -267,18 +287,24 @@ export default function AdminComplaintDetail() {
 
                             {/* Task count badges */}
                             <div className="flex items-center gap-1.5 shrink-0">
-                              <Badge
-                                variant={
-                                  taskInfo.active > 0
-                                    ? "secondary"
-                                    : "outline"
-                                }
-                              >
-                                {taskInfo.active} active
-                              </Badge>
-                              <Badge variant="outline">
-                                {taskInfo.resolved} done
-                              </Badge>
+                              {isOnLeave ? (
+                                <Badge variant="destructive">On Leave</Badge>
+                              ) : (
+                                <>
+                                  <Badge
+                                    variant={
+                                      taskInfo.active > 0
+                                        ? "secondary"
+                                        : "outline"
+                                    }
+                                  >
+                                    {taskInfo.active} active
+                                  </Badge>
+                                  <Badge variant="outline">
+                                    {taskInfo.resolved} done
+                                  </Badge>
+                                </>
+                              )}
                             </div>
                           </button>
                         );

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
-import { Complaint, ComplaintStatusLog, User } from "@/models";
+import { Complaint, ComplaintStatusLog, User, LeaveRequest } from "@/models";
 import { assignComplaintSchema } from "@/lib/validations";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
 
@@ -51,6 +51,24 @@ export async function POST(
 
     if (!worker) {
       return apiError("Worker not found or not in the same department", 400);
+    }
+
+    // Check if worker is currently on approved leave
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const activeLeave = await LeaveRequest.findOne({
+      workerId: assignedWorkerId,
+      status: "approved",
+      startDate: { $lte: today },
+      endDate: { $gte: today },
+    });
+
+    if (activeLeave) {
+      const endDate = new Date(activeLeave.endDate).toLocaleDateString();
+      return apiError(
+        `${worker.name} is currently on leave until ${endDate}. Please assign to another worker.`,
+        400,
+      );
     }
 
     // Check worker workload - strong validation

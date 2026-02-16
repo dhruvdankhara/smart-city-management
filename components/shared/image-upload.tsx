@@ -9,6 +9,14 @@ interface ImageUploadProps {
   maxFiles?: number;
 }
 
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
 export function ImageUpload({
   images,
   onChange,
@@ -23,7 +31,10 @@ export function ImageUpload({
       const remaining = maxFiles - images.length;
       const filesToProcess = Array.from(files)
         .slice(0, remaining)
-        .filter((file) => file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024);
+        .filter(
+          (file) =>
+            ALLOWED_TYPES.includes(file.type) && file.size <= MAX_FILE_SIZE,
+        );
 
       const readPromises = filesToProcess.map(
         (file) =>
@@ -67,7 +78,7 @@ export function ImageUpload({
         >
           <input
             type="file"
-            accept="image/*"
+            accept=".jpg,.jpeg,.png,.gif,.webp"
             multiple
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             onChange={(e) => handleFiles(e.target.files)}

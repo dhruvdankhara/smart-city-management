@@ -86,6 +86,20 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
 
+    // Rate limit: max 5 complaints per user per day
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const todayCount = await Complaint.countDocuments({
+      reporterId: auth.userId,
+      createdAt: { $gte: startOfDay },
+    });
+    if (todayCount >= 5) {
+      return apiError(
+        "Daily limit reached. You can submit a maximum of 5 complaints per day.",
+        429,
+      );
+    }
+
     const body = await req.json();
     const parsed = createComplaintSchema.safeParse(body);
 
@@ -100,10 +114,22 @@ export async function POST(req: NextRequest) {
     const category = await ComplaintCategory.findById(categoryId);
     if (!category) return apiError("Invalid category", 400);
 
-    // Upload images if provided
+    // Upload images if provided (with validation)
+    const ALLOWED_MIME_TYPES = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
     const images = [];
     if (body.imageFiles && Array.isArray(body.imageFiles)) {
       for (const file of body.imageFiles.slice(0, 5)) {
+        if (typeof file !== "string") continue;
+        const mimeMatch = file.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/);
+        if (!mimeMatch || !ALLOWED_MIME_TYPES.includes(mimeMatch[1])) continue;
+        const base64Data = file.split(",")[1];
+        if (!base64Data || (base64Data.length * 3) / 4 > 5 * 1024 * 1024)
+          continue;
         const result = await uploadImage(file, "complaints");
         images.push(result);
       }

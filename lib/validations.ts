@@ -1,5 +1,20 @@
 import { z } from "zod";
 
+// Sanitize user input: strip HTML tags and trim whitespace
+function stripHtml(value: string): string {
+  return value.replace(/<[^>]*>/g, "").trim();
+}
+
+// Zod preprocessor that sanitizes string input
+const safeString = (min: number, max: number, label: string) =>
+  z.preprocess(
+    (val) => (typeof val === "string" ? stripHtml(val) : val),
+    z
+      .string()
+      .min(min, `${label} must be at least ${min} characters`)
+      .max(max, `${label} must be at most ${max} characters`),
+  );
+
 // --- Auth ---
 export const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -7,9 +22,13 @@ export const loginSchema = z.object({
 });
 
 export const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  name: safeString(2, 100, "Name"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(10, "Phone must be at least 10 digits").max(15),
+  phone: z
+    .string()
+    .min(10, "Phone must be at least 10 digits")
+    .max(15)
+    .regex(/^[+\d\s()-]+$/, "Phone contains invalid characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -26,32 +45,29 @@ export const setupAccountSchema = z
 
 // --- Department ---
 export const departmentSchema = z.object({
-  name: z.string().min(2, "Department name is required").max(100),
+  name: safeString(2, 100, "Department name"),
   code: z.string().min(2, "Code is required").max(10).toUpperCase(),
   description: z.string().max(500).optional(),
 });
 
 // --- Complaint Category ---
 export const complaintCategorySchema = z.object({
-  name: z.string().min(2, "Category name is required").max(100),
+  name: safeString(2, 100, "Category name"),
   code: z.string().min(2, "Code is required").max(20).toUpperCase(),
   departmentId: z.string().min(1, "Department is required"),
 });
 
 // --- Complaint ---
 export const createComplaintSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters").max(200),
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters")
-    .max(2000),
+  title: safeString(5, 200, "Title"),
+  description: safeString(10, 2000, "Description"),
   categoryId: z.string().min(1, "Category is required"),
   priority: z.enum(["low", "medium", "high", "critical"]).default("medium"),
   location: z.object({
     type: z.literal("Point"),
     coordinates: z.tuple([z.number(), z.number()]),
   }),
-  address: z.string().min(5, "Address is required"),
+  address: z.string().min(5, "Address is required").max(500),
   images: z
     .array(
       z.object({
@@ -85,9 +101,13 @@ export const updateStatusSchema = z.object({
 
 // --- Create User (Admin/Worker by Super Admin) ---
 export const createUserSchema = z.object({
-  name: z.string().min(2, "Name is required").max(100),
+  name: safeString(2, 100, "Name"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(10, "Phone must be at least 10 digits").max(15),
+  phone: z
+    .string()
+    .min(10, "Phone must be at least 10 digits")
+    .max(15)
+    .regex(/^[+\d\s()-]+$/, "Phone contains invalid characters"),
   role: z.enum(["admin", "worker"]),
   departmentId: z.string().min(1, "Department is required"),
 });
@@ -96,12 +116,12 @@ export const createUserSchema = z.object({
 export const leaveRequestSchema = z.object({
   startDate: z.string().min(1, "Start date is required"),
   endDate: z.string().min(1, "End date is required"),
-  reason: z.string().min(5, "Reason must be at least 5 characters").max(500),
+  reason: safeString(5, 500, "Reason"),
 });
 
 // --- Area ---
 export const areaSchema = z.object({
-  name: z.string().min(2, "Area name is required").max(100),
+  name: safeString(2, 100, "Area name"),
   location: z.object({
     type: z.literal("Point"),
     coordinates: z.tuple([z.number(), z.number()]),
@@ -111,7 +131,7 @@ export const areaSchema = z.object({
 
 // --- Profile Update ---
 export const updateProfileSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  name: safeString(2, 100, "Name"),
   avatar: z
     .object({
       url: z.string().url(),

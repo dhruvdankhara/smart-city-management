@@ -32,11 +32,24 @@ export default function NewComplaint() {
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [error, setError] = useState("");
   const [aiSuccess, setAiSuccess] = useState("");
+  const [remainingToday, setRemainingToday] = useState<number | null>(null);
 
   useEffect(() => {
     apiClient.get("/categories").then(({ data }) => {
       setCategories(data.data);
     });
+    // Check today's complaint count for rate limit display
+    const today = new Date().toISOString().split("T")[0];
+    apiClient
+      .get("/complaints?limit=10&page=1")
+      .then(({ data }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const todayCount = data.data.complaints.filter((c: any) =>
+          c.createdAt?.startsWith(today),
+        ).length;
+        setRemainingToday(5 - todayCount);
+      })
+      .catch(() => {});
   }, []);
 
   const handleAiFill = async () => {
@@ -136,6 +149,17 @@ export default function NewComplaint() {
             message={aiSuccess}
             onClose={() => setAiSuccess("")}
           />
+        )}
+        {remainingToday !== null && remainingToday <= 0 && (
+          <AlertBanner
+            variant="warning"
+            message="You have reached the daily limit of 5 complaints. Please try again tomorrow."
+          />
+        )}
+        {remainingToday !== null && remainingToday > 0 && (
+          <p className="text-xs text-muted-foreground">
+            {remainingToday} of 5 complaints remaining today
+          </p>
         )}
 
         {/* Title */}
@@ -264,7 +288,11 @@ export default function NewComplaint() {
 
         {/* Submit */}
         <div className="flex gap-3">
-          <LoadingButton type="submit" isLoading={isLoading}>
+          <LoadingButton
+            type="submit"
+            isLoading={isLoading}
+            disabled={remainingToday !== null && remainingToday <= 0}
+          >
             Submit Complaint
           </LoadingButton>
           <button
