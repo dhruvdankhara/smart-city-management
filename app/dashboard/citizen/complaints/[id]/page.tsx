@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { StatusBadge, PriorityBadge } from "@/components/shared/status-badge";
 import { AlertBanner } from "@/components/shared/alert-banner";
 import { LoadingButton } from "@/components/shared/loading-button";
-import { MapPin, Calendar, User, Clock } from "lucide-react";
+import { MapPin, Calendar, User, Clock, Phone } from "lucide-react";
 import apiClient from "@/lib/api-client";
 import type { ComplaintStatus } from "@/types";
 
@@ -196,10 +196,23 @@ export default function CitizenComplaintDetail() {
             )}
 
             {complaint.assignedWorkerId && (
-              <div className="flex items-center gap-2 text-sm">
-                <User className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">Assigned to:</span>
-                <span>{complaint.assignedWorkerId.name}</span>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-sm">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Assigned to:</span>
+                  <span>{complaint.assignedWorkerId.name}</span>
+                </div>
+                {complaint.assignedWorkerId.phone && (
+                  <div className="flex items-center gap-2 text-sm ml-6">
+                    <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                    <a
+                      href={`tel:${complaint.assignedWorkerId.phone}`}
+                      className="text-primary hover:underline"
+                    >
+                      {complaint.assignedWorkerId.phone}
+                    </a>
+                  </div>
+                )}
               </div>
             )}
 

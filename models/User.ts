@@ -12,6 +12,10 @@ const UserSchema = new Schema(
     },
     phone: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true, select: false },
+    avatar: {
+      url: { type: String, default: null },
+      public_id: { type: String, default: null },
+    },
     role: {
       type: String,
       enum: ["citizen", "admin", "worker", "super-admin"],

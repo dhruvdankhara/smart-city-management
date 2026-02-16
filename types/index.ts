@@ -34,6 +34,7 @@ export interface IUser {
   email: string;
   phone: string;
   password: string;
+  avatar?: CloudinaryImage | null;
   role: UserRole;
   departmentId?: string;
   isActive: boolean;

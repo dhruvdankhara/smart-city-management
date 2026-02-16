@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
       name: user.name,
       email: user.email,
       phone: user.phone,
+      avatar: user.avatar || null,
       role: user.role,
       departmentId: user.departmentId?.toString(),
       isActive: user.isActive,

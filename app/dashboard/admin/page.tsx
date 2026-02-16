@@ -170,7 +170,7 @@ export default function AdminDashboard() {
                     key={ws._id}
                     className="flex items-center justify-between text-sm"
                   >
-                    <span>Worker {ws._id?.toString().slice(-4)}</span>
+                    <span>Worker {ws.name.toString()}</span>
                     <div className="flex gap-3">
                       <span className="text-blue-600">{ws.active} active</span>
                       <span className="text-green-600">{ws.resolved} done</span>

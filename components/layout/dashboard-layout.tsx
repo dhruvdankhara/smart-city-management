@@ -15,6 +15,7 @@ import {
   CalendarDays,
   Tags,
   MapPin,
+  UserCircle,
   type LucideIcon,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
@@ -52,6 +53,7 @@ const navItems: Record<UserRole, NavItem[]> = {
       icon: FileText,
     },
     { label: "Map View", href: "/dashboard/super-admin/map", icon: MapPin },
+    { label: "Profile", href: "/dashboard/super-admin/profile", icon: UserCircle },
   ],
   admin: [
     { label: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
@@ -63,11 +65,13 @@ const navItems: Record<UserRole, NavItem[]> = {
     { label: "Workers", href: "/dashboard/admin/workers", icon: Users },
     { label: "Leaves", href: "/dashboard/admin/leaves", icon: CalendarDays },
     { label: "Map View", href: "/dashboard/admin/map", icon: MapPin },
+    { label: "Profile", href: "/dashboard/admin/profile", icon: UserCircle },
   ],
   worker: [
     { label: "Dashboard", href: "/dashboard/worker", icon: LayoutDashboard },
     { label: "My Tasks", href: "/dashboard/worker/tasks", icon: ClipboardList },
     { label: "Leave", href: "/dashboard/worker/leave", icon: CalendarDays },
+    { label: "Profile", href: "/dashboard/worker/profile", icon: UserCircle },
   ],
   citizen: [
     { label: "Dashboard", href: "/dashboard/citizen", icon: LayoutDashboard },
@@ -81,6 +85,7 @@ const navItems: Record<UserRole, NavItem[]> = {
       href: "/dashboard/citizen/complaints/new",
       icon: ClipboardList,
     },
+    { label: "Profile", href: "/dashboard/citizen/profile", icon: UserCircle },
   ],
 };
 
@@ -201,11 +206,23 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
           </button>
           <div className="flex-1" />
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-sm font-semibold text-primary">
-                {user.name.charAt(0).toUpperCase()}
-              </span>
-            </div>
+            <Link
+              href={`/dashboard/${user.role}/profile`}
+              className="h-8 w-8 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center hover:ring-2 hover:ring-primary transition-all"
+            >
+              {user.avatar?.url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={user.avatar.url}
+                  alt={user.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-semibold text-primary">
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+              )}
+            </Link>
           </div>
         </header>
 
