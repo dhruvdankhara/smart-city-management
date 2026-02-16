@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { LocationPicker } from "@/components/shared/location-picker";
 import { ImageUpload } from "@/components/shared/image-upload";
@@ -28,13 +29,51 @@ export default function NewComplaint() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const [error, setError] = useState("");
+  const [aiSuccess, setAiSuccess] = useState("");
 
   useEffect(() => {
     apiClient.get("/categories").then(({ data }) => {
       setCategories(data.data);
     });
   }, []);
+
+  const handleAiFill = async () => {
+    if (!form.title && !form.description) {
+      setError("Please enter a title or description first for AI to classify");
+      return;
+    }
+    setIsAiLoading(true);
+    setError("");
+    setAiSuccess("");
+
+    try {
+      const { data } = await apiClient.post("/complaints/ai-classify", {
+        title: form.title,
+        description: form.description,
+      });
+
+      const { categoryId, priority } = data.data;
+      setForm((prev) => ({
+        ...prev,
+        categoryId: categoryId || prev.categoryId,
+        priority: priority || prev.priority,
+      }));
+
+      const catName = categories.find(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (c: any) => c._id === categoryId,
+      )?.name;
+      setAiSuccess(
+        `AI suggested: ${catName || "Unknown category"} / ${priority} priority`,
+      );
+    } catch {
+      setError("AI classification failed. Please select manually.");
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,6 +130,13 @@ export default function NewComplaint() {
             onClose={() => setError("")}
           />
         )}
+        {aiSuccess && (
+          <AlertBanner
+            variant="success"
+            message={aiSuccess}
+            onClose={() => setAiSuccess("")}
+          />
+        )}
 
         {/* Title */}
         <div className="space-y-2">
@@ -107,6 +153,42 @@ export default function NewComplaint() {
             required
           />
         </div>
+
+        {/* Description */}
+        <div className="space-y-2">
+          <label htmlFor="description" className="text-sm font-medium">
+            Description
+          </label>
+          <textarea
+            id="description"
+            placeholder="Describe the issue in detail..."
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+            rows={4}
+            className="flex w-full rounded-lg border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+            required
+          />
+        </div>
+
+        {/* AI Fill Button */}
+        <button
+          type="button"
+          onClick={handleAiFill}
+          disabled={isAiLoading}
+          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-violet-500 to-indigo-500 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:from-violet-600 hover:to-indigo-600 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {isAiLoading ? (
+            <>
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              Analyzing...
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-4 w-4" />
+              AI Auto-Fill Category & Priority
+            </>
+          )}
+        </button>
 
         {/* Category */}
         <div className="space-y-2">
@@ -148,22 +230,6 @@ export default function NewComplaint() {
             <option value="high">High</option>
             <option value="critical">Critical</option>
           </select>
-        </div>
-
-        {/* Description */}
-        <div className="space-y-2">
-          <label htmlFor="description" className="text-sm font-medium">
-            Description
-          </label>
-          <textarea
-            id="description"
-            placeholder="Describe the issue in detail..."
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            rows={4}
-            className="flex w-full rounded-lg border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
-            required
-          />
         </div>
 
         {/* Location */}
