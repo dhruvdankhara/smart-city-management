@@ -62,6 +62,19 @@ export default function WorkerTasks() {
       ),
     },
     {
+      key: "reporterId",
+      label: "Reporter",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      render: (item: any) => (
+        <div>
+          <p className="text-sm">{item.reporterId?.name || "—"}</p>
+          {item.reporterId?.phone && (
+            <p className="text-xs text-muted-foreground">{item.reporterId.phone}</p>
+          )}
+        </div>
+      ),
+    },
+    {
       key: "priority",
       label: "Priority",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

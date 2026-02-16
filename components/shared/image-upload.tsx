@@ -21,18 +21,21 @@ export function ImageUpload({
       if (!files) return;
 
       const remaining = maxFiles - images.length;
-      const filesToProcess = Array.from(files).slice(0, remaining);
+      const filesToProcess = Array.from(files)
+        .slice(0, remaining)
+        .filter((file) => file.type.startsWith("image/") && file.size <= 5 * 1024 * 1024);
 
-      filesToProcess.forEach((file) => {
-        if (!file.type.startsWith("image/")) return;
-        if (file.size > 5 * 1024 * 1024) return; // 5MB limit
+      const readPromises = filesToProcess.map(
+        (file) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target?.result as string);
+            reader.readAsDataURL(file);
+          }),
+      );
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          onChange([...images, result]);
-        };
-        reader.readAsDataURL(file);
+      Promise.all(readPromises).then((results) => {
+        onChange([...images, ...results]);
       });
     },
     [images, maxFiles, onChange],

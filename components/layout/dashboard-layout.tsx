@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { logout, fetchCurrentUser } from "@/store/slices/authSlice";
-import { toggleSidebar } from "@/store/slices/uiSlice";
+import { toggleSidebar, setSidebarOpen } from "@/store/slices/uiSlice";
 import type { UserRole } from "@/types";
 
 interface NavItem {
@@ -149,6 +149,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => dispatch(setSidebarOpen(false))}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-primary text-primary-foreground"

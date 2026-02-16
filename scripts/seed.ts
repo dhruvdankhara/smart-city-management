@@ -5,7 +5,9 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/smart-city-management";
+  process.env.MONGODB_URI ||
+  "mongodb+srv://dhruvdankhara:Dhruv123@cluster0.caefmrp.mongodb.net/smart-city-management";
+console.log("🚀 ~ seed.ts:9 ~ MONGODB_URI:", MONGODB_URI);
 
 async function seed() {
   await mongoose.connect(MONGODB_URI);

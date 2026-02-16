@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { Complaint, User, Department } from "@/models";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
@@ -39,11 +40,11 @@ export async function GET(req: NextRequest) {
     const baseFilter: Record<string, any> = {};
 
     if (auth.role === "citizen") {
-      baseFilter.reporterId = auth.userId;
+      baseFilter.reporterId = new mongoose.Types.ObjectId(auth.userId);
     } else if (auth.role === "worker") {
-      baseFilter.assignedWorkerId = auth.userId;
+      baseFilter.assignedWorkerId = new mongoose.Types.ObjectId(auth.userId);
     } else if (auth.role === "admin") {
-      baseFilter.departmentId = auth.departmentId;
+      baseFilter.departmentId = new mongoose.Types.ObjectId(auth.departmentId);
     }
 
     // Aggregate stats
@@ -150,8 +151,10 @@ export async function GET(req: NextRequest) {
 
     // Admin extras: overdue tasks
     if (auth.role === "admin") {
+      const deptObjectId = new mongoose.Types.ObjectId(auth.departmentId);
+
       dashboardData.overdueComplaints = await Complaint.countDocuments({
-        departmentId: auth.departmentId,
+        departmentId: deptObjectId,
         status: { $in: ["assigned", "in_progress"] },
         slaDeadline: { $lt: new Date() },
       });
@@ -159,7 +162,7 @@ export async function GET(req: NextRequest) {
       dashboardData.workerStats = await Complaint.aggregate([
         {
           $match: {
-            departmentId: auth.departmentId,
+            departmentId: deptObjectId,
             assignedWorkerId: { $ne: null },
           },
         },

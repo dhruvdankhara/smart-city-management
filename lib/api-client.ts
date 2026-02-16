@@ -25,7 +25,14 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      if (typeof window !== "undefined") {
+      // Don't redirect on auth endpoints — those return 401 for invalid credentials
+      const url = error.config?.url || "";
+      const isAuthRoute =
+        url.includes("/auth/login") ||
+        url.includes("/auth/register") ||
+        url.includes("/auth/setup-account");
+
+      if (!isAuthRoute && typeof window !== "undefined") {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "/login";
