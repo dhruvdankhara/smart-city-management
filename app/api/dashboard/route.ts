@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { Complaint, User, Department } from "@/models";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
-import { getCachedData, setCachedData } from "@/lib/redis";
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,10 +13,6 @@ export async function GET(req: NextRequest) {
 
     const url = new URL(req.url);
     const timeframe = url.searchParams.get("timeframe") || "month"; // day, month, year
-
-    const cacheKey = `dashboard:${auth.role}:${auth.userId}:${timeframe}`;
-    const cached = await getCachedData(cacheKey);
-    if (cached) return apiResponse(cached, "Dashboard stats (cached)");
 
     let dateFilter: Date;
     const now = new Date();
@@ -205,8 +200,6 @@ export async function GET(req: NextRequest) {
         },
       ]);
     }
-
-    await setCachedData(cacheKey, dashboardData, 120);
 
     return apiResponse(dashboardData, "Dashboard stats fetched");
   } catch (error) {

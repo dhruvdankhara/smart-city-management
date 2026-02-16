@@ -2,7 +2,6 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import { User } from "@/models";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
-import { invalidateCache } from "@/lib/redis";
 
 // GET /api/users/[id]
 export async function GET(
@@ -73,7 +72,6 @@ export async function PATCH(
       user.departmentId = departmentId;
 
     await user.save();
-    await invalidateCache("users:*");
 
     return apiResponse(user, "User updated");
   } catch (error) {

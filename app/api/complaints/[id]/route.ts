@@ -2,7 +2,6 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Complaint, ComplaintStatusLog } from "@/models";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
-import { invalidateCache } from "@/lib/redis";
 
 // GET /api/complaints/[id]
 export async function GET(
@@ -131,8 +130,6 @@ export async function PATCH(
         note: body.note || "",
       });
     }
-
-    await invalidateCache("complaints:*");
 
     return apiResponse(complaint, "Complaint updated successfully");
   } catch (error) {

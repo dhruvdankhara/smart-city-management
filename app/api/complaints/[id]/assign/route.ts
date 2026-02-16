@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/db";
 import { Complaint, ComplaintStatusLog, User } from "@/models";
 import { assignComplaintSchema } from "@/lib/validations";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
-import { invalidateCache } from "@/lib/redis";
 
 // POST /api/complaints/[id]/assign - Assign complaint to worker
 export async function POST(
@@ -113,8 +112,6 @@ export async function POST(
       changedBy: auth.userId,
       note: `Assigned to ${worker.name}`,
     });
-
-    await invalidateCache("complaints:*");
 
     const responseData = {
       complaint,

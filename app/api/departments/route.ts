@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/db";
 import { Department } from "@/models";
 import { departmentSchema } from "@/lib/validations";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
-import { invalidateCache, getCachedData, setCachedData } from "@/lib/redis";
 
 // GET /api/departments
 export async function GET(req: NextRequest) {
@@ -13,12 +12,7 @@ export async function GET(req: NextRequest) {
 
     await connectDB();
 
-    const cached = await getCachedData("departments:all");
-    if (cached) return apiResponse(cached, "Departments fetched (cached)");
-
     const departments = await Department.find().sort({ name: 1 }).lean();
-
-    await setCachedData("departments:all", departments, 300);
 
     return apiResponse(departments, "Departments fetched");
   } catch (error) {
@@ -47,7 +41,6 @@ export async function POST(req: NextRequest) {
       return apiError("Department with this code already exists", 409);
 
     const department = await Department.create(parsed.data);
-    await invalidateCache("departments:*");
 
     return apiResponse(department, "Department created", 201);
   } catch (error) {

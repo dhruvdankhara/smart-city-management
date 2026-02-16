@@ -14,7 +14,6 @@ import {
   getPaginationParams,
 } from "@/lib/api-utils";
 import { uploadImage } from "@/lib/cloudinary";
-import { invalidateCache, getCachedData, setCachedData } from "@/lib/redis";
 
 // GET /api/complaints - List complaints (filtered by role)
 export async function GET(req: NextRequest) {
@@ -49,11 +48,6 @@ export async function GET(req: NextRequest) {
     if (departmentId && auth.role === "super-admin")
       filter.departmentId = departmentId;
 
-    // Try cache
-    const cacheKey = `complaints:${JSON.stringify(filter)}:${page}:${limit}:${sort}`;
-    const cached = await getCachedData(cacheKey);
-    if (cached) return apiResponse(cached, "Complaints fetched (cached)");
-
     const [complaints, total] = await Promise.all([
       Complaint.find(filter)
         .populate("categoryId", "name code")
@@ -76,8 +70,6 @@ export async function GET(req: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     };
-
-    await setCachedData(cacheKey, result, 60);
 
     return apiResponse(result, "Complaints fetched successfully");
   } catch (error) {
@@ -152,8 +144,6 @@ export async function POST(req: NextRequest) {
       changedBy: auth.userId,
       note: "Complaint registered",
     });
-
-    await invalidateCache("complaints:*");
 
     return apiResponse(complaint, "Complaint registered successfully", 201);
   } catch (error) {

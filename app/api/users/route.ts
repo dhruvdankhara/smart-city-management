@@ -10,7 +10,6 @@ import {
   authorize,
   getPaginationParams,
 } from "@/lib/api-utils";
-import { invalidateCache } from "@/lib/redis";
 
 // GET /api/users - List users (super-admin: all, admin: workers in department)
 export async function GET(req: NextRequest) {
@@ -131,8 +130,6 @@ export async function POST(req: NextRequest) {
       console.error("Email send error:", emailError);
       // Don't fail the whole request if email fails
     }
-
-    await invalidateCache("users:*");
 
     return apiResponse(
       { user, setupLink },

@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/db";
 import { Department } from "@/models";
 import { departmentSchema } from "@/lib/validations";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
-import { invalidateCache } from "@/lib/redis";
 
 // GET /api/departments/[id]
 export async function GET(
@@ -52,7 +51,6 @@ export async function PATCH(
 
     if (!department) return apiError("Department not found", 404);
 
-    await invalidateCache("departments:*");
     return apiResponse(department, "Department updated");
   } catch (error) {
     console.error("Update department error:", error);
@@ -80,7 +78,6 @@ export async function DELETE(
 
     if (!department) return apiError("Department not found", 404);
 
-    await invalidateCache("departments:*");
     return apiResponse(department, "Department deactivated");
   } catch (error) {
     console.error("Delete department error:", error);

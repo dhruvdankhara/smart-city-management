@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/db";
 import { ComplaintCategory } from "@/models";
 import { complaintCategorySchema } from "@/lib/validations";
 import { apiResponse, apiError, authorize } from "@/lib/api-utils";
-import { getCachedData, setCachedData, invalidateCache } from "@/lib/redis";
 
 // GET /api/categories
 export async function GET(req: NextRequest) {
@@ -13,15 +12,10 @@ export async function GET(req: NextRequest) {
 
     await connectDB();
 
-    const cached = await getCachedData("categories:all");
-    if (cached) return apiResponse(cached, "Categories fetched (cached)");
-
     const categories = await ComplaintCategory.find()
       .populate("departmentId", "name code")
       .sort({ name: 1 })
       .lean();
-
-    await setCachedData("categories:all", categories, 300);
 
     return apiResponse(categories, "Categories fetched");
   } catch (error) {
@@ -52,7 +46,6 @@ export async function POST(req: NextRequest) {
       return apiError("Category with this code already exists", 409);
 
     const category = await ComplaintCategory.create(parsed.data);
-    await invalidateCache("categories:*");
 
     return apiResponse(category, "Category created", 201);
   } catch (error) {
