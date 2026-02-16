@@ -46,6 +46,11 @@ const navItems: Record<UserRole, NavItem[]> = {
       href: "/dashboard/super-admin/categories",
       icon: Tags,
     },
+    {
+      label: "Areas",
+      href: "/dashboard/super-admin/areas",
+      icon: MapPin,
+    },
     { label: "Users", href: "/dashboard/super-admin/users", icon: Users },
     {
       label: "Complaints",

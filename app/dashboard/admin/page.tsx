@@ -8,6 +8,7 @@ import {
   AlertTriangle,
   CheckCircle,
   AlertCircle,
+  MapPin,
 } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatCard } from "@/components/shared/stat-card";
@@ -205,6 +206,42 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Area Breakdown */}
+          {(dashData.areaStats?.length > 0 ||
+            dashData.unassignedAreaCount > 0) && (
+            <div className="rounded-xl border bg-card p-5 mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <MapPin className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold">Area Breakdown</h3>
+              </div>
+              <div className="space-y-2">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {dashData.areaStats?.map((area: any) => (
+                  <div
+                    key={area._id}
+                    className="flex items-center justify-between text-sm"
+                  >
+                    <span className="font-medium">{area.name}</span>
+                    <div className="flex gap-3">
+                      <span className="text-muted-foreground">
+                        {area.total} complaints
+                      </span>
+                      <span className="text-green-600">
+                        {area.resolved} resolved
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                {dashData.unassignedAreaCount > 0 && (
+                  <div className="flex items-center justify-between text-sm text-muted-foreground pt-1 border-t">
+                    <span>Unassigned Area</span>
+                    <span>{dashData.unassignedAreaCount} complaints</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Recent complaints */}
           <div className="rounded-xl border bg-card shadow-sm">

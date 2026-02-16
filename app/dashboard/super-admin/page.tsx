@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   Clock,
   AlertCircle,
+  MapPin,
 } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatCard } from "@/components/shared/stat-card";
@@ -228,6 +229,50 @@ export default function SuperAdminDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Area Performance */}
+          {(dashData.areaStats?.length > 0 ||
+            dashData.unassignedAreaCount > 0) && (
+            <div className="rounded-xl border bg-card p-5 mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <MapPin className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold">Area Performance</h3>
+              </div>
+              <div className="space-y-3">
+                {dashData.areaStats?.map(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  (area: any) => {
+                    const rate =
+                      area.total > 0
+                        ? Math.round((area.resolved / area.total) * 100)
+                        : 0;
+                    return (
+                      <div key={area._id}>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="font-medium">{area.name}</span>
+                          <span className="text-muted-foreground">
+                            {area.resolved}/{area.total} ({rate}%)
+                          </span>
+                        </div>
+                        <div className="h-2 rounded-full bg-muted overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-primary"
+                            style={{ width: `${rate}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  },
+                )}
+                {dashData.unassignedAreaCount > 0 && (
+                  <div className="flex justify-between text-sm text-muted-foreground pt-1 border-t">
+                    <span>Unassigned Area</span>
+                    <span>{dashData.unassignedAreaCount} complaints</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Recent complaints */}
           <div className="rounded-xl border bg-card shadow-sm">

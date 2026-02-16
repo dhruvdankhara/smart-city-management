@@ -144,6 +144,55 @@ export async function GET(req: NextRequest) {
       ]);
     }
 
+    // Area stats for super-admin and admin
+    if (auth.role === "super-admin" || auth.role === "admin") {
+      const areaMatchFilter = {
+        ...baseFilter,
+        createdAt: { $gte: dateFilter },
+        areaId: { $ne: null },
+      };
+
+      dashboardData.areaStats = await Complaint.aggregate([
+        { $match: areaMatchFilter },
+        {
+          $group: {
+            _id: "$areaId",
+            total: { $sum: 1 },
+            resolved: {
+              $sum: { $cond: [{ $eq: ["$status", "resolved"] }, 1, 0] },
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "areas",
+            localField: "_id",
+            foreignField: "_id",
+            as: "area",
+          },
+        },
+        { $unwind: "$area" },
+        {
+          $project: {
+            _id: 1,
+            total: 1,
+            resolved: 1,
+            name: "$area.name",
+          },
+        },
+        { $sort: { total: -1 } },
+        { $limit: 10 },
+      ]);
+
+      // Count complaints with no area
+      const unassignedAreaCount = await Complaint.countDocuments({
+        ...baseFilter,
+        createdAt: { $gte: dateFilter },
+        areaId: null,
+      });
+      dashboardData.unassignedAreaCount = unassignedAreaCount;
+    }
+
     // Admin extras: overdue tasks
     if (auth.role === "admin") {
       const deptObjectId = new mongoose.Types.ObjectId(auth.departmentId);
