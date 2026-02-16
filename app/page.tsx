@@ -1,7 +1,22 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { ArrowRight, BarChart2, Building2, Lightbulb, ShieldCheck, Truck, Users, Activity } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  ArrowRight,
+  BarChart2,
+  Building2,
+  Lightbulb,
+  ShieldCheck,
+  Truck,
+  Users,
+  Activity,
+} from "lucide-react";
 
 export default function LandingPage() {
   return (
@@ -13,13 +28,22 @@ export default function LandingPage() {
             <span>SmartCity</span>
           </Link>
           <nav className="hidden md:flex ml-auto gap-6">
-            <Link className="text-sm font-medium hover:text-primary transition-colors" href="#features">
+            <Link
+              className="text-sm font-medium hover:text-primary transition-colors"
+              href="#features"
+            >
               Features
             </Link>
-            <Link className="text-sm font-medium hover:text-primary transition-colors" href="#services">
+            <Link
+              className="text-sm font-medium hover:text-primary transition-colors"
+              href="#services"
+            >
               Services
             </Link>
-            <Link className="text-sm font-medium hover:text-primary transition-colors" href="#dashboard">
+            <Link
+              className="text-sm font-medium hover:text-primary transition-colors"
+              href="#dashboard"
+            >
               Dashboard
             </Link>
           </nav>
@@ -30,9 +54,7 @@ export default function LandingPage() {
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="sm">
-                Get Started
-              </Button>
+              <Button size="sm">Get Started</Button>
             </Link>
           </div>
         </div>
@@ -46,7 +68,9 @@ export default function LandingPage() {
                   Smarter Cities for a Better Future
                 </h1>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                  Optimize urban living with our integrated smart city management platform. Monitor, analyze, and improve city services in real-time.
+                  Optimize urban living with our integrated smart city
+                  management platform. Monitor, analyze, and improve city
+                  services in real-time.
                 </p>
               </div>
               <div className="space-x-4">
@@ -65,14 +89,22 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted/50 flex justify-center">
+        <section
+          id="features"
+          className="w-full py-12 md:py-24 lg:py-32 bg-muted/50 flex justify-center"
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Key Features</div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Comprehensive City Management</h2>
+                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
+                  Key Features
+                </div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  Comprehensive City Management
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mx-auto">
-                  Our platform provides tools to manage every aspect of city infrastructure from a single dashboard.
+                  Our platform provides tools to manage every aspect of city
+                  infrastructure from a single dashboard.
                 </p>
               </div>
             </div>
@@ -84,7 +116,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <CardDescription>
-                    Monitor city metrics including traffic flow, air quality, and energy consumption in real-time.
+                    Monitor city metrics including traffic flow, air quality,
+                    and energy consumption in real-time.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -95,7 +128,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <CardDescription>
-                    Optimize public transport and waste management routes to reduce costs and improve service.
+                    Optimize public transport and waste management routes to
+                    reduce costs and improve service.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -106,7 +140,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <CardDescription>
-                    Integrated emergency response systems and surveillance monitoring for safer neighborhoods.
+                    Integrated emergency response systems and surveillance
+                    monitoring for safer neighborhoods.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -117,7 +152,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <CardDescription>
-                    Automated street lighting systems that adjust based on ambient light and presence detection.
+                    Automated street lighting systems that adjust based on
+                    ambient light and presence detection.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -128,7 +164,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <CardDescription>
-                    Direct communication channels for citizens to report issues and receive updates from the city.
+                    Direct communication channels for citizens to report issues
+                    and receive updates from the city.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -139,7 +176,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <CardDescription>
-                    Advanced analytics and reporting tools to make data-driven decisions for urban planning.
+                    Advanced analytics and reporting tools to make data-driven
+                    decisions for urban planning.
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -151,18 +189,19 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="grid gap-10 sm:px-10 md:gap-16 md:grid-cols-2">
               <div className="space-y-4">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Case Studies</div>
+                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
+                  Case Studies
+                </div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   Trusted by Leading Smart Cities
                 </h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  See how cities around the world are using our platform to improve quality of life for their citizens.
+                  See how cities around the world are using our platform to
+                  improve quality of life for their citizens.
                 </p>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link href="/case-studies">
-                    <Button variant="outline">
-                      View Case Studies
-                    </Button>
+                    <Button variant="outline">View Case Studies</Button>
                   </Link>
                 </div>
               </div>
@@ -170,24 +209,36 @@ export default function LandingPage() {
                 <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
                   <div className="flex items-center space-x-4">
                     <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">Metro City</p>
-                      <p className="text-sm text-muted-foreground">Reduced energy consumption by 25%</p>
+                      <p className="text-sm font-medium leading-none">
+                        Metro City
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Reduced energy consumption by 25%
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
                   <div className="flex items-center space-x-4">
                     <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">Harbor Town</p>
-                      <p className="text-sm text-muted-foreground">Improved waste collection efficiency by 40%</p>
+                      <p className="text-sm font-medium leading-none">
+                        Harbor Town
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Improved waste collection efficiency by 40%
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
                   <div className="flex items-center space-x-4">
                     <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none">Tech Valley</p>
-                      <p className="text-sm text-muted-foreground">Decreased traffic congestion by 30%</p>
+                      <p className="text-sm font-medium leading-none">
+                        Tech Valley
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Decreased traffic congestion by 30%
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -200,9 +251,12 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Ready to Transform Your City?</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  Ready to Transform Your City?
+                </h2>
                 <p className="max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed opacity-90 mx-auto">
-                  Join the network of smart cities today. Get started with our platform and see the difference.
+                  Join the network of smart cities today. Get started with our
+                  platform and see the difference.
                 </p>
               </div>
               <div className="space-x-4">
@@ -212,7 +266,11 @@ export default function LandingPage() {
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button size="lg" variant="outline" className="h-11 px-8 bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-11 px-8 bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                  >
                     Contact Sales
                   </Button>
                 </Link>
@@ -231,10 +289,16 @@ export default function LandingPage() {
             © 2024 SmartCity Management. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <Link className="text-sm text-muted-foreground hover:underline underline-offset-4" href="#">
+            <Link
+              className="text-sm text-muted-foreground hover:underline underline-offset-4"
+              href="#"
+            >
               Terms
             </Link>
-            <Link className="text-sm text-muted-foreground hover:underline underline-offset-4" href="#">
+            <Link
+              className="text-sm text-muted-foreground hover:underline underline-offset-4"
+              href="#"
+            >
               Privacy
             </Link>
           </div>
