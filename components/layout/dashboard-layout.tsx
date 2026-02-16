@@ -146,9 +146,18 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1">
           {items.map((item) => {
+            const isExactMatch = pathname === item.href;
+            const isChildMatch =
+              item.href !== items[0].href && pathname.startsWith(item.href + "/");
+            // Check if another nav item is a more specific match
+            const hasMoreSpecificMatch = items.some(
+              (other) =>
+                other.href !== item.href &&
+                other.href.startsWith(item.href) &&
+                (pathname === other.href || pathname.startsWith(other.href + "/")),
+            );
             const isActive =
-              pathname === item.href ||
-              (item.href !== items[0].href && pathname.startsWith(item.href));
+              isExactMatch || (isChildMatch && !hasMoreSpecificMatch);
 
             return (
               <Link
