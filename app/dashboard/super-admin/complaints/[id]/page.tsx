@@ -46,7 +46,7 @@ export default function SuperAdminComplaintDetail() {
 
   return (
     <div>
-      <PageHeader title={complaint.title} />
+      <PageHeader title={complaint.title} backHref="/dashboard/super-admin/complaints" />
       {error && <AlertBanner variant="error" message={error} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

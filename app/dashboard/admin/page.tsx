@@ -165,21 +165,43 @@ export default function AdminDashboard() {
               )}
               <div className="space-y-3">
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {dashData.workerStats?.map((ws: any) => (
-                  <div
-                    key={ws._id}
-                    className="flex items-center justify-between text-sm"
-                  >
-                    <span>Worker {ws.name.toString()}</span>
-                    <div className="flex gap-3">
-                      <span className="text-blue-600">{ws.active} active</span>
-                      <span className="text-green-600">{ws.resolved} done</span>
-                      <span className="text-muted-foreground">
-                        {ws.total} total
-                      </span>
+                {dashData.workerStats?.map((ws: any) => {
+                  return (
+                    <div
+                      key={ws._id}
+                      className="flex items-center justify-between text-sm"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden">
+                          {ws.avatar?.url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={ws.avatar.url}
+                              alt={ws.name || "Worker"}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-xs font-semibold text-primary">
+                              {(ws.name || "?").charAt(0).toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                        <span className="font-medium">{ws.name || "Unknown"}</span>
+                      </div>
+                      <div className="flex gap-3">
+                        <span className="text-blue-600">
+                          {ws.active} active
+                        </span>
+                        <span className="text-green-600">
+                          {ws.resolved} done
+                        </span>
+                        <span className="text-muted-foreground">
+                          {ws.total} total
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

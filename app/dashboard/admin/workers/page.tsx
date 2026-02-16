@@ -53,7 +53,8 @@ export default function AdminWorkers() {
         departmentId: user?.departmentId,
       });
 
-      setSuccess(`Worker created. Setup link: ${data.data.setupLink}`);
+      setSuccess(`Worker created successfully. Setup link sent to ${form.email}.`);
+      console.log("Setup link:", data.data.setupLink);
       setShowForm(false);
       setForm({ name: "", email: "", phone: "" });
       fetchWorkers();

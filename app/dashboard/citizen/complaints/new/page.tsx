@@ -80,6 +80,7 @@ export default function NewComplaint() {
       <PageHeader
         title="Register Complaint"
         description="Fill in the details to file a new complaint"
+        backHref="/dashboard/citizen/complaints"
       />
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">

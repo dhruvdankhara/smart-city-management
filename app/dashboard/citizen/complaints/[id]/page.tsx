@@ -72,6 +72,7 @@ export default function CitizenComplaintDetail() {
     <div>
       <PageHeader
         title={complaint.title}
+        backHref="/dashboard/citizen/complaints"
         action={
           canCancel ? (
             <LoadingButton

@@ -184,6 +184,25 @@ export async function GET(req: NextRequest) {
             },
           },
         },
+        {
+          $lookup: {
+            from: "users",
+            localField: "_id",
+            foreignField: "_id",
+            as: "worker",
+          },
+        },
+        { $unwind: { path: "$worker", preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            _id: 1,
+            total: 1,
+            resolved: 1,
+            active: 1,
+            name: "$worker.name",
+            avatar: "$worker.avatar",
+          },
+        },
       ]);
     }
 

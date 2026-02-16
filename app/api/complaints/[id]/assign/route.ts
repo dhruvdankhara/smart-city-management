@@ -29,6 +29,11 @@ export async function POST(
     const complaint = await Complaint.findById(id);
     if (!complaint) return apiError("Complaint not found", 404);
 
+    // Only allow assigning if complaint has not been assigned yet
+    if (complaint.status !== "reported") {
+      return apiError("This complaint is already assigned", 400);
+    }
+
     // Admin can only assign complaints from their department
     if (
       auth.role === "admin" &&

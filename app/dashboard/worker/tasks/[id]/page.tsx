@@ -93,7 +93,7 @@ export default function WorkerTaskDetail() {
 
   return (
     <div>
-      <PageHeader title={task.title} />
+      <PageHeader title={task.title} backHref="/dashboard/worker/tasks" />
 
       {error && (
         <AlertBanner

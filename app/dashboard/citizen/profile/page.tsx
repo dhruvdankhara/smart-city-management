@@ -1,5 +1,5 @@
 import { ProfilePage } from "@/components/shared/profile-page";
 
 export default function CitizenProfile() {
-  return <ProfilePage />;
+  return <ProfilePage backHref="/dashboard/citizen" />;
 }

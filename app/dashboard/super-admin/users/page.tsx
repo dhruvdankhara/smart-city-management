@@ -64,8 +64,9 @@ export default function SuperAdminUsers() {
 
     try {
       const { data } = await apiClient.post("/users", form);
+      console.log("Setup link:", data.data.setupLink);
       setSuccess(
-        `User created. Setup link sent to ${form.email}. Link: ${data.data.setupLink}`,
+        `User created successfully. Setup link sent to ${form.email}.`,
       );
       setShowForm(false);
       setForm({

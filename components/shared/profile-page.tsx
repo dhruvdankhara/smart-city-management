@@ -7,7 +7,7 @@ import { setUser } from "@/store/slices/authSlice";
 import { PageHeader } from "@/components/layout/page-header";
 import apiClient from "@/lib/api-client";
 
-export function ProfilePage() {
+export function ProfilePage({ backHref }: { backHref?: string }) {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((s) => s.auth);
 
@@ -148,7 +148,7 @@ export function ProfilePage() {
 
   return (
     <div>
-      <PageHeader title="Profile" description="Manage your account settings" />
+      <PageHeader title="Profile" description="Manage your account settings" backHref={backHref} />
 
       <div className="grid gap-6 max-w-2xl">
         {/* Profile Info Card */}
